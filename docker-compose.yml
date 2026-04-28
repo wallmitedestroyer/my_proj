@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  api:
+    build: .  # Dockerfile
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:16-alpine  # here is the updated line with the correct image version
+    environment:   # environment variables for PostgreSQL
+      POSTGRES_DB: my_proj # name of the database to be created
+      POSTGRES_USER: postgres # username for the database
+      POSTGRES_PASSWORD: password # password for the database user
+    ports:
+      - "5432:5432" # expose PostgreSQL port
+    volumes:  # persist data in a named volume
+      - postgres_data:/var/lib/postgresql/data 
+
+volumes: # define the named volume for PostgreSQL data persistence
+  postgres_data: # this volume will store the PostgreSQL data and persist it across container restarts
